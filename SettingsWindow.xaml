@@ -60,7 +60,7 @@
                     <Slider x:Name="LabelFontSlider" Grid.Column="1" Minimum="10" Maximum="24" Value="{Binding LabelFontSize}" TickFrequency="1" IsSnapToTickEnabled="True"/>
                     <TextBlock Grid.Column="2" Text="{Binding LabelFontSize, StringFormat={}{0:F0}}" VerticalAlignment="Center" FontSize="12" Foreground="#c0caf5" Margin="8,0,0,0"/>
                 </Grid>
-                <TextBlock Text="作者：少峰" FontSize="11" Foreground="#7aa2f7" HorizontalAlignment="Right" Margin="0,0,0,8"/>
+                <TextBlock Text="作者：少峰" FontSize="11" Foreground="#7aa2f7" HorizontalAlignment="Right" Margin="0,0,0,8" Cursor="Hand" MouseLeftButtonDown="Author_Click"/>
             </StackPanel>
         </Grid>
     </Border>

@@ -50,5 +50,6 @@ public partial class SettingsWindow : Window
     private void AutoStartCheck_Changed(object s, RoutedEventArgs e) { if (AutoStartCheck.IsChecked.HasValue) { AppSettings.Current.AutoStartWithWindows = AutoStartCheck.IsChecked.Value; AppSettings.Save(); ToggleAutoStart(AutoStartCheck.IsChecked.Value); } }
     private static void ToggleAutoStart(bool enable) { var exePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "deepseek", "deepseek.exe"); var rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true); if (enable) rk?.SetValue("DeepSeekMonitor", $"\"{exePath}\""); else rk?.DeleteValue("DeepSeekMonitor", false); }
     private void Window_MouseDown(object s, MouseButtonEventArgs e) { if (e.ClickCount == 1 && e.LeftButton == MouseButtonState.Pressed) DragMove(); }
+    private void Author_Click(object s, MouseButtonEventArgs e) { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("https://github.com/1013739046-coder/DeepSeekMonitor-SF") { UseShellExecute = true }); }
     private void Close_Click(object s, RoutedEventArgs e) => Close();
 }
