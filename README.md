@@ -1,4 +1,4 @@
-## v1.0.0 初始发布
+## DeepSeek Monitor SF
 
 DeepSeek 余额和用量桌面监控挂件。
 
