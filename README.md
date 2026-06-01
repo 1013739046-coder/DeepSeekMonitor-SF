@@ -1,8 +1,8 @@
-## DeepSeek Monitor SF
+# DeepSeek Monitor SF
 
 DeepSeek 余额和用量桌面监控挂件。
 
-### 功能
+## 功能
 - 实时余额 + 账户状态指示
 - V4 Pro / Flash Token 用量和费用
 - 近 7 天用量柱状图
@@ -12,5 +12,5 @@ DeepSeek 余额和用量桌面监控挂件。
 - 开机自启 / 每次自动导入
 - 置顶切换
 
-### 安装
-下载下方 Setup.exe，双击安装。
+## 安装
+下载 [Releases](https://github.com/1013739046-coder/DeepSeekMonitor-SF/releases) 中的 `DeepSeekMonitor-SF.zip`，解压双击运行。
