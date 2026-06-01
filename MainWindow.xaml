@@ -1,0 +1,148 @@
+<Window x:Class="DeepSeekMonitor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="CanResizeWithGrip" Width="310" Height="460"
+        MinWidth="260" MinHeight="380" Topmost="False">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="BgColor" Color="#1a1b26"/>
+        <SolidColorBrush x:Key="CardColor" Color="#24253b"/>
+        <SolidColorBrush x:Key="AccentColor" Color="#7aa2f7"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#c0caf5"/>
+        <SolidColorBrush x:Key="TextSecondary" Color="#787c99"/>
+        <SolidColorBrush x:Key="FlashColor" Color="#449d87"/>
+        <SolidColorBrush x:Key="ProColor" Color="#e0af68"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <Style x:Key="CardBorder" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardColor}"/>
+            <Setter Property="CornerRadius" Value="10"/><Setter Property="Padding" Value="14,10"/>
+        </Style>
+        <Style x:Key="TitleText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Setter Property="FontFamily" Value="Microsoft YaHei UI"/><Setter Property="FontSize" Value="14"/><Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style x:Key="BodyText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextSecondary}"/>
+            <Setter Property="FontFamily" Value="Microsoft YaHei UI"/><Setter Property="FontSize" Value="12"/>
+        </Style>
+        <Style x:Key="FixedSmall" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextSecondary}"/>
+            <Setter Property="FontFamily" Value="Microsoft YaHei UI"/><Setter Property="FontSize" Value="11"/>
+        </Style>
+        <Style x:Key="ToolButton" TargetType="Button">
+            <Setter Property="Width" Value="28"/><Setter Property="Height" Value="24"/><Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontFamily" Value="Microsoft YaHei UI"/><Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondary}"/><Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="4,2"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border></ControlTemplate></Setter.Value></Setter>
+            <Style.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#2f3145"/><Setter Property="Foreground" Value="{StaticResource TextPrimary}"/></Trigger></Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="{StaticResource BgColor}" CornerRadius="12" BorderBrush="#2f3145" BorderThickness="1" MouseLeftButtonDown="Window_MouseDown">
+        <Grid Margin="16,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0,0,0,10">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Image Source="deepseek.png" Width="20" Height="20" Margin="0,0,6,0" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    <TextBlock Text="DeepSeek" Style="{StaticResource TitleText}" FontSize="16"/>
+                    <TextBlock Text=" Monitor" Style="{StaticResource TitleText}" FontSize="16" Foreground="{StaticResource AccentColor}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="&#x27F3;" Style="{StaticResource ToolButton}" Click="Refresh_Click" ToolTip="刷新"/>
+                    <Button Content="&#x2699;" Style="{StaticResource ToolButton}" Click="Settings_Click" ToolTip="设置"/>
+                    <Button Content="&#x2715;" Style="{StaticResource ToolButton}" Click="Close_Click" ToolTip="关闭"/>
+                </StackPanel>
+            </Grid>
+
+            <Border Grid.Row="1" Style="{StaticResource CardBorder}" Margin="0,0,0,6">
+                <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="当前余额" Style="{StaticResource BodyText}" FontSize="{Binding LabelFontSize}"/>
+                        <TextBlock Text="{Binding TotalBalanceFormatted}" Foreground="{StaticResource AccentColor}" FontFamily="Consolas" FontWeight="Bold" FontSize="{Binding NumberFontSize}" Margin="0,2,0,0"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                            <Ellipse Width="8" Height="8" Margin="0,0,6,0">
+                                <Ellipse.Style><Style TargetType="Ellipse"><Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsAccountAvailable}" Value="True"><Setter Property="Fill" Value="#449d87"/></DataTrigger>
+                                    <DataTrigger Binding="{Binding IsAccountAvailable}" Value="False"><Setter Property="Fill" Value="#f7768e"/></DataTrigger>
+                                </Style.Triggers></Style></Ellipse.Style>
+                            </Ellipse>
+                            <TextBlock Text="{Binding AccountStatusText}" Style="{StaticResource FixedSmall}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Rectangle Grid.Column="1" Width="1" Fill="#2f3145" Margin="12,0"/>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="本月消费" Style="{StaticResource BodyText}" FontSize="{Binding LabelFontSize}"/>
+                        <TextBlock Text="{Binding CurrentMonthCostFormatted}" Foreground="#f7768e" FontFamily="Consolas" FontWeight="Bold" FontSize="{Binding NumberFontSize}" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="2" Style="{StaticResource CardBorder}" Margin="0,0,0,6" Visibility="{Binding HasProData, Converter={StaticResource BoolToVis}}">
+                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="V4 Pro" Style="{StaticResource TitleText}" FontSize="13" Foreground="{StaticResource ProColor}"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                            <TextBlock Text="{Binding ProTokensText}" FontFamily="Consolas" FontSize="12" Foreground="{StaticResource TextPrimary}"/>
+                            <TextBlock Text=" Token" FontSize="12" FontFamily="Microsoft YaHei UI" Foreground="{StaticResource TextSecondary}" Margin="2,0,0,0"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding ProRequestsText}" FontSize="11" Foreground="{StaticResource TextSecondary}" Margin="0,2,0,0"/>
+                    </StackPanel>
+                    <TextBlock Grid.Column="1" FontSize="14" FontWeight="Bold" Foreground="{StaticResource ProColor}" VerticalAlignment="Center" Text="{Binding ProCostFormatted}"/>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="3" Style="{StaticResource CardBorder}" Margin="0,0,0,6" Visibility="{Binding HasFlashData, Converter={StaticResource BoolToVis}}">
+                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="V4 Flash" Style="{StaticResource TitleText}" FontSize="13" Foreground="{StaticResource FlashColor}"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                            <TextBlock Text="{Binding FlashTokensText}" FontFamily="Consolas" FontSize="12" Foreground="{StaticResource TextPrimary}"/>
+                            <TextBlock Text=" Token" FontSize="12" FontFamily="Microsoft YaHei UI" Foreground="{StaticResource TextSecondary}" Margin="2,0,0,0"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding FlashRequestsText}" FontSize="11" Foreground="{StaticResource TextSecondary}" Margin="0,2,0,0"/>
+                    </StackPanel>
+                    <TextBlock Grid.Column="1" FontSize="14" FontWeight="Bold" Foreground="{StaticResource FlashColor}" VerticalAlignment="Center" Text="{Binding FlashCostFormatted}"/>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="5" Style="{StaticResource CardBorder}" Margin="0,6,0,0">
+                <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="近7天用量" Style="{StaticResource FixedSmall}" Margin="0,0,0,6"/>
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding DailyBars}">
+                        <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate><DataTemplate>
+                            <StackPanel Width="30" Margin="1,0" VerticalAlignment="Bottom">
+                                <Border CornerRadius="3 3 0 0" Height="{Binding BarHeight}" HorizontalAlignment="Center" Width="16">
+                                    <Border.ToolTip><ToolTip><TextBlock Text="{Binding Tip}" FontFamily="Consolas" FontSize="11"/></ToolTip></Border.ToolTip>
+                                    <Border.Style><Style TargetType="Border"><Setter Property="Background" Value="#7aa2f7"/><Style.Triggers><DataTrigger Binding="{Binding Tokens}" Value="0"><Setter Property="Background" Value="#2f3145"/></DataTrigger></Style.Triggers></Style></Border.Style>
+                                </Border>
+                                <TextBlock Text="{Binding Day}" FontSize="9" Foreground="#787c99" FontFamily="Consolas" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                            </StackPanel>
+                        </DataTemplate></ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="7" Margin="0,6,0,0" Height="18">
+                <Grid>
+                    <TextBlock Text="{Binding BottomStatusText}" FontSize="11" FontFamily="Microsoft YaHei UI" HorizontalAlignment="Left">
+                        <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Foreground" Value="#787c99"/>
+                            <Style.Triggers><DataTrigger Binding="{Binding HasError}" Value="True"><Setter Property="Foreground" Value="#f7768e"/></DataTrigger>
+                            <DataTrigger Binding="{Binding IsLoading}" Value="True"><Setter Property="Foreground" Value="#7aa2f7"/></DataTrigger></Style.Triggers>
+                        </Style></TextBlock.Style>
+                    </TextBlock>
+                    <TextBlock Text="少峰" FontSize="11" Foreground="#7aa2f7" FontFamily="Microsoft YaHei UI" HorizontalAlignment="Right" Cursor="Hand" ToolTip="点击切换置顶" MouseLeftButtonDown="Topmost_Click"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
