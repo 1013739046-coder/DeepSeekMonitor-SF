@@ -6,10 +6,12 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>deepseek.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <Resource Include="deepseek.png" />
+    <Resource Include="deepseek.ico" />
   </ItemGroup>
 
   <ItemGroup>
